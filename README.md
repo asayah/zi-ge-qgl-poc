@@ -42,9 +42,9 @@ kubectl apply -f https://raw.githubusercontent.com/solo-io/gloo-graphql-example/
 
 To do this in Gloo Gateway we will create some configuration. To start, we will create the GraphQL schema, which contains the resolvers: 
 
-```
 
-kubectl apply -f - <<EOF
+
+```
 apiVersion: graphql.gloo.solo.io/v1beta1
 kind: GraphQLApi
 metadata:
@@ -100,8 +100,6 @@ spec:
       type User {
         username: String
       }
-
-EOF
 ```
 
 
@@ -115,7 +113,6 @@ Now, to expose the GraphQL API to the public using the virtual service, create t
 
 
 ```
-kubectl apply -f - <<EOF
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -141,8 +138,6 @@ spec:
         namespace: gloo-system
       matchers:
       - prefix: /graphql
-EOF
-
 ```
 
 Now your GraphQL API is exposed, and you can send your requests. For example, let’s retrieve the blogs and their related comments using the following query:
@@ -224,7 +219,6 @@ Apply the following configuration to represent the proxied User GraphQL API:
 
 
 ```
-kubectl apply -f - <<EOF
 apiVersion: graphql.gloo.solo.io/v1beta1
 kind: GraphQLApi
 metadata:
@@ -250,8 +244,6 @@ spec:
       type Query {
         getUserDetails(username: String!): User
       }
-EOF
-
 ```
 This GraphQL API is proxying the query getUserDetails to upstream default-users-80, which is the Apollo GraphQL server. 
 
@@ -264,7 +256,6 @@ create the stitched schema using the following configuration:
 
 
 ```
-kubectl apply -f - <<EOF
 apiVersion: graphql.gloo.solo.io/v1beta1
 kind: GraphQLApi
 metadata:
@@ -287,8 +278,6 @@ spec:
             username: username
     - name: blogs-graphql
       namespace: gloo-system
-
-EOF
 ```
 
 It is important to note that in the stitched GraphQL API we defined a typeMerge for the type User; this will invoke the query getUserDetails based on a username during the merge. 
@@ -298,7 +287,6 @@ Finally, expose this new stitched GraphQL schema using a virtual Service; we wil
 
 
 ```
-kubectl apply -f - <<EOF
 apiVersion: gateway.solo.io/v1
 kind: VirtualService
 metadata:
@@ -324,10 +312,7 @@ spec:
         namespace: gloo-system
       matchers:
       - prefix: /graphql
-EOF
 ```
-
-
 
 You can try the stitched GraphQL API now making the following query: 
 
