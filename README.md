@@ -31,10 +31,12 @@ helm install gloo glooe/gloo-ee --namespace gloo-system --create-namespace --set
 ![alt text](image-1.png)
 
 ```
-# Blogs 
+# Blogs (A REST service) 
 kubectl apply -f https://raw.githubusercontent.com/solo-io/gloo-graphql-example/main/manifests/svcs/blogs.yaml
-# Comments
+# Comments (A REST service) 
 kubectl apply -f https://raw.githubusercontent.com/solo-io/gloo-graphql-example/main/manifests/svcs/comments.yaml
+#Users (A GraphQL service) 
+kubectl apply -f https://raw.githubusercontent.com/solo-io/gloo-graphql-example/main/manifests/svcs/users.yaml
 ```
 
 
