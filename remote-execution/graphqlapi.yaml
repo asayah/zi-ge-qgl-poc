@@ -1,0 +1,25 @@
+apiVersion: graphql.gloo.solo.io/v1beta1
+kind: GraphQLApi
+metadata:
+  name: remote-graphql-users
+  namespace: gloo-system
+spec:
+  options:
+     logSensitiveInfo: true
+  executableSchema:
+    executor:
+      remote:
+        upstreamRef: 
+          name: default-users-80
+          namespace: gloo-system
+    schemaDefinition: |
+      type User {
+        id: Int!
+        username: String
+        lastname: String
+        firstname: String
+      }
+
+      type Query {
+        getUserDetails(username: String!): User
+      }

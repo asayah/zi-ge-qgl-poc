@@ -1,0 +1,55 @@
+apiVersion: graphql.gloo.solo.io/v1beta1
+kind: GraphQLApi
+metadata:
+  name: blogs-graphql
+  namespace: gloo-system
+spec:
+  options:
+    logSensitiveInfo: true
+  executableSchema:
+    executor:
+      local:
+        enableIntrospection: true
+        resolutions:
+          getBlogs:
+            restResolver:
+              request:
+                headers:
+                  :method: GET
+                  :path: /blogs
+              upstreamRef:
+                name: default-blogs-80
+                namespace: gloo-system
+          getComments:
+            restResolver:
+              request:
+                headers:
+                  :method: GET
+                  :path: /comments?blogid={$parent.id}
+              upstreamRef:
+                name: default-comments-80
+                namespace: gloo-system
+
+    schemaDefinition: |
+      type Query {
+        """Description of a blogs in HTML"""
+        getBlogs: [Blog] @resolve(name: "getBlogs")
+      }
+
+      type Blog {      
+        id: Int
+        user: User
+        content: String
+        title: String
+        comments: [Comment] @resolve(name: "getComments")
+      }
+
+      type Comment {      
+        id: Int
+        user: User
+        comment: String
+      }
+
+      type User {      
+        username: String
+      }

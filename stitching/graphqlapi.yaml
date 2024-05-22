@@ -1,0 +1,20 @@
+apiVersion: graphql.gloo.solo.io/v1beta1
+kind: GraphQLApi
+metadata:
+  name: stitched-gql
+  namespace: gloo-system
+spec:
+  options:
+     logSensitiveInfo: true
+  stitchedSchema:
+    subschemas:
+    - name: remote-graphql-users
+      namespace: gloo-system
+      typeMerge:
+        User:
+          selectionSet: '{ username }'
+          queryName: getUserDetails
+          args:
+            username: username
+    - name: blogs-graphql
+      namespace: gloo-system

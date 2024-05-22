@@ -1,0 +1,25 @@
+apiVersion: gateway.solo.io/v1
+kind: VirtualService
+metadata:
+  name: default
+  namespace: gloo-system
+spec:
+  virtualHost:
+    domains:
+    - '*'
+    options:
+      cors:
+        allowCredentials: true
+        allowHeaders:
+        - content-type
+        allowMethods:
+        - POST
+        allowOriginRegex:
+        - '/*'
+    routes:
+      # ----------- Route to the Declared GraphQL API -----------
+    - graphqlApiRef:
+        name: blogs-graphql
+        namespace: gloo-system
+      matchers:
+      - prefix: /graphql
